@@ -100,5 +100,29 @@ describe('API Area', function () {
                 .catch(done);
         });
     });
+    
+     describe('Validação', function() {
+        it('Retornar erro de validação quando a area tiver um tamanho maior que o maximo.',
+            function (done) {
+                var dadosArea = criarObjetoArea();
+                dadosArea.area = 'abcdefgijklmnopqrstuvxzzzzzzzzzzzzzzzzzz';
+
+                apiUtil.criarJsonPost('/api/areas', dadosArea, 400)
+                    .expect(apiUtil.verificarErroApi('ErroValidacao'))
+                    .end(done);
+            }
+        );
+
+        it('Retornar erro de validação quando os campos não nulos não forem enviados.',
+            function (done) {
+                var areaEmBranco = {};
+
+                apiUtil.criarJsonPost('/api/Areas', areaEmBranco, 400)
+                    .expect(apiUtil.verificarErroApi('ErroValidacao', 4))
+                    .end(done);
+            }
+        );
+
+    });
 
 });

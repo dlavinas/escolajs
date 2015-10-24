@@ -108,5 +108,51 @@ describe('API Turma', function () {
                 .catch(done);
         });
     });
+    
+    describe('Validação', function() {
+        it('Retornar erro de validação quando a sigla tiver um tamanho maior que o maximo.',
+            function (done) {
+                var dadosTurma = criarObjetoTurma();
+                dadosTurma.sigla = 'abcdefgijklmnopqrstuvxzzzzzzzzzzzzzzzzzz';
+
+                apiUtil.criarJsonPost('/api/turmas', dadosTurma, 400)
+                    .expect(apiUtil.verificarErroApi('ErroValidacao'))
+                    .end(done);
+            }
+        );
+
+        it('Retornar erro de validação quando a ano tiver um tamanho maior que o maximo.',
+            function (done) {
+                var dadosTurma = criarObjetoTurma();
+                dadosTurma.ano = '12345';
+
+                apiUtil.criarJsonPost('/api/turmas', dadosTurma, 400)
+                    .expect(apiUtil.verificarErroApi('ErroValidacao'))
+                    .end(done);
+            }
+        );
+
+        it('Retornar erro de validação quando a semestre tiver um tamanho maior que o maximo.',
+            function (done) {
+                var dadosTurma = criarObjetoTurma();
+                dadosTurma.sigla = '11';
+
+                apiUtil.criarJsonPost('/api/turmas', dadosTurma, 400)
+                    .expect(apiUtil.verificarErroApi('ErroValidacao'))
+                    .end(done);
+            }
+        );
+
+        it('Retornar erro de validação quando os campos não nulos não forem enviados.',
+            function (done) {
+                var turmaEmBranco = {};
+
+                apiUtil.criarJsonPost('/api/Turmas', turmaEmBranco, 400)
+                    .expect(apiUtil.verificarErroApi('ErroValidacao', 4))
+                    .end(done);
+            }
+        );
+
+    });
 
 });

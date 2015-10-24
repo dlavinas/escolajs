@@ -107,5 +107,40 @@ describe('API Cursos', function () {
                 .catch(done);
         });
     });
+    
+    describe('Validação', function() {
+        it('Retornar erro de validação quando o nome do curso exceder o limite máximo.',
+            function (done) {
+                var dadosCurso = criarObjetoCurso();
+                dadosCurso.curso = '1234567890qwertyuiop1234567890qwertyuiop1234567890qwertyuiop1234567890qwertyuiop1234567890qwertyuiopzzz';
+
+                apiUtil.criarJsonPost('/api/cursos', dadosCurso, 400)
+                    .expect(apiUtil.verificarErroApi('ErroValidacao'))
+                    .end(done);
+            }
+        );
+
+        it('Retornar erro de validação quando os campos não nulos não forem enviados.',
+            function (done) {
+                var cursoEmBranco = {};
+
+                apiUtil.criarJsonPost('/api/professores', cursoEmBranco, 400)
+                    .expect(apiUtil.verificarErroApi('ErroValidacao', 4))
+                    .end(done);
+            }
+        );
+        
+        it('Retornar erro de validação quando a sigla do curso exceder o limite máximo.',
+            function (done) {
+                var dadosCurso = criarObjetoCurso();
+                dadosCurso.sigla = '1234567890qwertyuiopzzz';
+
+                apiUtil.criarJsonPost('/api/cursos', dadosCurso, 400)
+                    .expect(apiUtil.verificarErroApi('ErroValidacao'))
+                    .end(done);
+            }
+        );
+        
+    });
 
 });
